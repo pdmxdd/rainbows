@@ -21,7 +21,8 @@ def post_register():
         }), 400)
 
     user = User(email=request.json["email"],
-                password=hash_password(request.json["password"]))
+                password=hash_password(request.json["password"]),
+                starting_balance=request.json["starting_balance"])
 
     db.session.add(user)
     db.session.commit()
@@ -33,6 +34,16 @@ def post_register():
 def seed_db():
     seed_db_with_users()
     return make_json_response(json.dumps({"status": "success"}), 200)
+
+
+@app.route("/breach-database", methods=["POST", "GET"])
+def breach_database():
+    users = User.query.all()
+    print([user.to_dict() for user in users])
+
+    return make_json_response(json.dumps({
+        "users": [user.to_dict() for user in users]
+    }), 200)
 
 
 if __name__ == "__main__":

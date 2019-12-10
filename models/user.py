@@ -1,3 +1,4 @@
+import json
 from util.util import hash_password
 from application_configuration.app import db
 
@@ -10,7 +11,18 @@ class User(db.Model):
     password = db.Column(db.String)
     balance = db.Column(db.Numeric)
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, starting_balance=0):
         self.email = email
         self.password = hash_password(password)
-        self.balance = 0
+        self.balance = starting_balance
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "password": self.password,
+            "balance": float(self.balance)
+        }
+
+    def to_json(self):
+        return json.dumps(self.to_dict())
