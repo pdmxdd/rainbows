@@ -1,9 +1,8 @@
 import json
 from application_configuration.app import app, db
 from flask import request
-from util.util import make_json_response, hash_password, check_password
+from util.util import make_json_response, hash_password, check_password, seed_db_with_users
 from models.user import User
-from scripts.seed_db import seed_db_with_users
 
 
 @app.route("/login", methods=["POST"])
@@ -47,13 +46,15 @@ def post_register():
     return make_json_response(json.dumps({"status": "success"}), 201)
 
 
-@app.route("/seed-db", methods=["GET", "POST"])
+@app.route("/seed-db", methods=["POST"])
 def seed_db():
+    db.drop_all()
+    db.create_all()
     seed_db_with_users()
     return make_json_response(json.dumps({"status": "success"}), 200)
 
 
-@app.route("/breach-database", methods=["POST", "GET"])
+@app.route("/breach-database", methods=["POST"])
 def breach_database():
     users = User.query.all()
 
@@ -95,7 +96,11 @@ def get_scan_rainbow_table():
     return make_json_response(json.dumps(hits), 200)
 
 
-if __name__ == "__main__":
+@app.route("/reset-db", methods=["POST", "GET"])
+def reset_db():
     db.drop_all()
     db.create_all()
+
+
+if __name__ == "__main__":
     app.run(debug=True, port=8888)

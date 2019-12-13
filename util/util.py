@@ -1,5 +1,9 @@
 import hashlib
 from flask import make_response
+import requests
+from faker import Faker
+from random import randint, random
+from util.password_generator import get_bad_password, get_good_password
 
 
 def hash_password(password):
@@ -19,3 +23,18 @@ def make_json_response(the_json, status_code):
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth")
     '''
     return response
+
+
+def seed_db_with_users():
+    fake = Faker()
+
+    for i in range(100):
+        if randint(0, 1) == 1:
+            password = get_good_password()
+        else:
+            password = get_bad_password()
+
+        random_balance = randint(25, 25000) * random()
+
+        requests.post(url="http://127.0.0.1:8888/register",
+                      json={"email": fake.ascii_free_email(), "password": password, "starting_balance": random_balance})
