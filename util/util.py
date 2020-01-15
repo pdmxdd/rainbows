@@ -1,4 +1,5 @@
 import json
+import os
 import hashlib
 from flask import make_response
 import requests
@@ -18,7 +19,7 @@ def check_password(password, password_hash):
 
 def make_json_response(the_dict, status_code):
     response = make_response(json.dumps(the_dict), status_code)
-    # response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Origin', f'{os.environ.get("FRONT_END")}')
     response.headers.add('Content-Type', 'application/json')
     '''response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth")
