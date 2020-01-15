@@ -10,7 +10,6 @@ host = os.environ.get("DB_HOST")
 port = os.environ.get("DB_PORT")
 db_name = os.environ.get("DB_NAME")
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://bank_user:bankuserpass@127.0.0.1:5432/bank"
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{user}:{password}@{host}/{db_name}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
